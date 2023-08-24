@@ -30,7 +30,6 @@
 #include "ux_device_stack.h"
 #include "ux_dcd_stm32.h"
 #include "ux_device_descriptors.h"
-//#include "ux_device_mouse.h"
 #include "ux_device_cdc_acm.h"
 #include "app_azure_rtos_config.h"
 #include "usb_drd_fs.h"
@@ -54,12 +53,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-TX_THREAD                       ux_app_thread;
-/*
-TX_THREAD                       ux_hid_thread;
-UX_SLAVE_CLASS_HID_EVENT        mouse_hid_event;
-UX_SLAVE_CLASS_HID_PARAMETER    hid_parameter;
-*/
+TX_THREAD                          ux_app_thread;
 TX_THREAD                          ux_cdc_read_thread;
 TX_THREAD                          ux_cdc_write_thread;
 TX_EVENT_FLAGS_GROUP               EventFlag;
@@ -160,8 +154,6 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
     {
       return UX_ERROR;
     }
-
-    //test init usb HW peripherals?
 
   /* Allocate the stack for main_usbx_app_thread_entry. */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
@@ -293,24 +285,8 @@ void MX_USB_Device_Init(void)
   MX_USB_DRD_FS_PCD_Init();
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
-  /*
-  // This was from the USBPD example
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x20);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x60);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x81, PCD_SNG_BUF, 0xA0);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x01, PCD_SNG_BUF, 0xE0);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x82, PCD_SNG_BUF, 0x120);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x83, PCD_SNG_BUF, 0x140);
-  */
 
-  // This was the original block
-//  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x0C);
-//  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x4C);
-//  HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x81, PCD_SNG_BUF, 0x8C);
-
-
-
-  // This was from the USBX example?
+  // This was from the USBX example
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x00, PCD_SNG_BUF, 0x14);
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x80, PCD_SNG_BUF, 0x54);
   HAL_PCDEx_PMAConfig(&hpcd_USB_DRD_FS, 0x81, PCD_SNG_BUF, 0x94);

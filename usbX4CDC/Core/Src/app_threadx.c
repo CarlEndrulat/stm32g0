@@ -140,7 +140,6 @@ void MainThread_Entry(unsigned long thread_input)
 	while (1)
 	{
 		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET)
-		//if (1)
 		{
 			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 
@@ -155,7 +154,6 @@ void MainThread_Entry(unsigned long thread_input)
 				}
 				txSent = 1;
 			}
-			//if ()
 		}
 		App_Delay(20);
 	}

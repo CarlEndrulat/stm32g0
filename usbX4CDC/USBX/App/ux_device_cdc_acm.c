@@ -25,7 +25,6 @@
 /* USER CODE BEGIN Includes */
 #include "main.h"
 #include "app_usbx_device.h"
-//#include "usart.h"
 #include "usb_drd_fs.h"
 /* USER CODE END Includes */
 
@@ -104,69 +103,8 @@ void CDC_Init_FS(void *cdc_acm)
 {
 
   /* USER CODE BEGIN 3 */
-  //HAL_PCD_Init(hpcd); already called
+
   /* USER CODE END 3 */
-//
-//  /* USER CODE BEGIN 3 */
-//  /*-- 1- Configure the UART peripheral --------------------------------------*/
-//  MX_USART1_UART_Init();
-//
-//  /* Get default uart parameters defined by CubeMx */
-//  /* Get uart3 baudrate */
-//  CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_baudrate = huart1.Init.BaudRate;
-//  hpcd_USB_DRD_FS;
-//
-//  /*set the data type : only 8bits and 9bits are supported */
-//  switch (huart1.Init.WordLength)
-//  {
-//    case UART_WORDLENGTH_8B:
-//    {
-//      /* Set data bit to 8 */
-//      CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_data_bit = VCP_WORDLENGTH8;
-//      break;
-//    }
-//
-//    case UART_WORDLENGTH_9B:
-//    {
-//      /* Set data bit to 9 */
-//      CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_data_bit = VCP_WORDLENGTH9;
-//      break;
-//    }
-//
-//    default :
-//    {
-//      /* By default set data bit to 8 */
-//      CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_data_bit = VCP_WORDLENGTH8;
-//      break;
-//    }
-//  }
-//
-//  /* Get uart3 Parity */
-//  CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_parity = huart1.Init.Parity;
-//
-//  /* Get uart3 StopBits */
-//  CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_stop_bit = huart1.Init.StopBits;
-//
-//  /* Set device_class_cdc_acm with default parameters */
-//  ux_status = ux_device_class_cdc_acm_ioctl(cdc_acm,
-//                                            UX_SLAVE_CLASS_CDC_ACM_IOCTL_SET_LINE_CODING,
-//                                            &CDC_VCP_LineCoding);
-//  /* Check Status */
-//  if (ux_status != UX_SUCCESS)
-//  {
-//    Error_Handler();
-//  }
-//
-//  /*-- 2- Put UART peripheral in IT reception process ------------------------*/
-//
-//  /* Any data received will be stored in "UserTxBufferFS" buffer  */
-//  if (HAL_UART_Receive_IT(&huart1, (uint8_t *)UserTxBufferFS, 1) != HAL_OK)
-//  {
-//    /* Transfer error in reception process */
-//    Error_Handler();
-//  }
-//
-//  /* USER CODE END 3 */
 }
 
 /**
@@ -176,86 +114,12 @@ void CDC_Init_FS(void *cdc_acm)
 void CDC_DeInit_FS(void *cdc_acm)
 {
   /* USER CODE BEGIN 4 */
-  //HAL_UART_DeInit(&huart1);
-  HAL_PCD_DeInit(hpcd);
+
+  // causes device to not reregister
+  //HAL_PCD_DeInit(hpcd);
+
   /* USER CODE END 4 */
 }
-
-///**
-//  * @brief  Manage the CDC class requests
-//  * @param  cdc Instance
-//  * @retval none
-//  */
-//VOID ux_app_parameters_change(VOID *cdc_acm)
-//{
-//  UX_SLAVE_TRANSFER *transfer_request;
-//  UX_SLAVE_DEVICE   *device;
-//  ULONG             request;
-//  UINT ux_status = UX_SUCCESS;
-//
-//  /* Get the pointer to the device.  */
-//  device = &_ux_system_slave -> ux_system_slave_device;
-//
-//  /* Get the pointer to the transfer request associated with the control endpoint. */
-//  transfer_request = &device -> ux_slave_device_control_endpoint.
-//                     ux_slave_endpoint_transfer_request;
-//
-//  /* Extract all necessary fields of the request. */
-//  request = *(transfer_request -> ux_slave_transfer_request_setup + UX_SETUP_REQUEST);
-//
-//  /* Here we proceed only the standard request we know of at the device level.  */
-//  switch (request)
-//  {
-//    /* Set Line Coding Command */
-//    case UX_SLAVE_CLASS_CDC_ACM_SET_LINE_CODING :
-//    {
-//      /* Get the Line Coding parameters */
-//      ux_status = ux_device_class_cdc_acm_ioctl(cdc_acm,
-//                                                UX_SLAVE_CLASS_CDC_ACM_IOCTL_GET_LINE_CODING,
-//                                                &CDC_VCP_LineCoding);
-//      /* Check Status */
-//      if (ux_status != UX_SUCCESS)
-//      {
-//        Error_Handler();
-//      }
-//
-//      /* Check if baudrate < 9600) then set it to 9600 */
-//      if (CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_baudrate < MIN_BAUDRATE)
-//      {
-//        CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_baudrate = MIN_BAUDRATE;
-//
-//        /* Set the new configuration of ComPort */
-//        USBD_CDC_VCP_Config(&CDC_VCP_LineCoding);
-//      }
-//      else
-//      {
-//        /* Set the new configuration of ComPort */
-//        USBD_CDC_VCP_Config(&CDC_VCP_LineCoding);
-//      }
-//      break;
-//    }
-//
-//    /* Get Line Coding Command */
-//    case UX_SLAVE_CLASS_CDC_ACM_GET_LINE_CODING :
-//    {
-//      ux_status = ux_device_class_cdc_acm_ioctl(cdc_acm,
-//                                                UX_SLAVE_CLASS_CDC_ACM_IOCTL_SET_LINE_CODING,
-//                                                &CDC_VCP_LineCoding);
-//
-//      /* Check Status */
-//      if (ux_status != UX_SUCCESS)
-//      {
-//        Error_Handler();
-//      }
-//      break;
-//    }
-//
-//    /* Set the the control line state */
-//    case UX_SLAVE_CLASS_CDC_ACM_SET_CONTROL_LINE_STATE :
-//    default :
-//      break;
-//  }
-//}
 
 /**
   * @brief  Function implementing usbx_cdc_acm_thread_entry.
@@ -399,177 +263,6 @@ return;
     }
   }
 }
-
-///**
-//  * @brief Tx Transfer completed callback.
-//  * @param huart UART handle.
-//  * @retval None
-//  */
-//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//  /* Set TX_NEW_TRANSMITTED_DATA flag */
-//  if (tx_event_flags_set(&EventFlag, TX_NEW_TRANSMITTED_DATA, TX_OR) != TX_SUCCESS)
-//  {
-//    Error_Handler();
-//  }
-//}
-//
-///**
-//  * @brief  Rx Transfer completed callback
-//  * @param  huart: UART handle
-//  * @retval None
-//  */
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//  /* Set RX_NEW_RECEIVED_DATA flag */
-//  if (tx_event_flags_set(&EventFlag, RX_NEW_RECEIVED_DATA, TX_OR) != TX_SUCCESS)
-//  {
-//    Error_Handler();
-//  }
-//
-//  /* Increment the UserTxBufPtrIn pointer */
-//  UserTxBufPtrIn++;
-//
-//  /* Rollback the UserTxBufPtrIn if it equal to APP_TX_DATA_SIZE */
-//  if (UserTxBufPtrIn == APP_TX_DATA_SIZE)
-//  {
-//    UserTxBufPtrIn = 0;
-//  }
-//
-//  /* Start another reception: provide the buffer pointer with offset and the buffer size */
-//  if (HAL_UART_Receive_IT(&huart1, (uint8_t *)UserTxBufferFS + UserTxBufPtrIn, 1) != HAL_OK)
-//  {
-//    /* Transfer error in reception process */
-//    Error_Handler();
-//  }
-//
-//}
-//
-///**
-//  * @brief  UART error callbacks
-//  * @param  UartHandle: UART handle
-//  * @retval None
-//  */
-//void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
-//{
-//  /* Transfer error occurred in reception and/or transmission process */
-//  Error_Handler();
-//}
-//
-///**
-//  * @brief  USBD_CDC_VCP_Config
-//  *         Configure the COM Port with the parameters received from host.
-//  * @param  UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER : linecoding struct.
-//  * @retval None.
-//  * @note   When a configuration is not supported, a default value is used.
-//  */
-//static void USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER
-//                                *CDC_VCP_LineCoding)
-//{
-//  /* Deinitialization uart3 */
-//  if (HAL_UART_DeInit(&huart1) != HAL_OK)
-//  {
-//    /* Deinitialization Error */
-//    Error_Handler();
-//  }
-//
-//  /* set the Stop bit */
-//  switch (CDC_VCP_LineCoding->ux_slave_class_cdc_acm_parameter_stop_bit)
-//  {
-//    case 0:
-//    {
-//      huart1.Init.StopBits = UART_STOPBITS_1;
-//      break;
-//    }
-//    case 2:
-//    {
-//      huart1.Init.StopBits = UART_STOPBITS_2;
-//      break;
-//    }
-//    default :
-//    {
-//      huart1.Init.StopBits = UART_STOPBITS_1;
-//      break;
-//    }
-//  }
-//
-//  /* set the parity bit */
-//  switch (CDC_VCP_LineCoding->ux_slave_class_cdc_acm_parameter_parity)
-//  {
-//    case 0:
-//    {
-//      huart1.Init.Parity = UART_PARITY_NONE;
-//      break;
-//    }
-//    case 1:
-//    {
-//      huart1.Init.Parity = UART_PARITY_ODD;
-//      break;
-//    }
-//    case 2:
-//    {
-//      huart1.Init.Parity = UART_PARITY_EVEN;
-//      break;
-//    }
-//    default :
-//    {
-//      huart1.Init.Parity = UART_PARITY_NONE;
-//      break;
-//    }
-//  }
-//
-//  /* Set the data type : only 8bits and 9bits is supported */
-//  switch (CDC_VCP_LineCoding->ux_slave_class_cdc_acm_parameter_data_bit)
-//  {
-//    case 0x07:
-//    {
-//      /* With this configuration a parity (Even or Odd) must be set */
-//      huart1.Init.WordLength = UART_WORDLENGTH_8B;
-//      break;
-//    }
-//    case 0x08:
-//    {
-//      if (huart1.Init.Parity == UART_PARITY_NONE)
-//      {
-//        huart1.Init.WordLength = UART_WORDLENGTH_8B;
-//      }
-//      else
-//      {
-//        huart1.Init.WordLength = UART_WORDLENGTH_9B;
-//      }
-//
-//      break;
-//    }
-//    default :
-//    {
-//      huart1.Init.WordLength = UART_WORDLENGTH_8B;
-//      break;
-//    }
-//  }
-//
-//  /* Get the uart baudrate from vcp */
-//  huart1.Init.BaudRate = CDC_VCP_LineCoding->ux_slave_class_cdc_acm_parameter_baudrate;
-//
-//  /* Set the Hw flow control to none */
-//  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-//
-//  /* Set the uart mode */
-//  huart1.Init.Mode = UART_MODE_TX_RX;
-//
-//  /* the the uart sampling */
-//  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-//
-//  /* Initialization huart1 */
-//  if (HAL_UART_Init(&huart1) != HAL_OK)
-//  {
-//    /* Initialization Error */
-//    Error_Handler();
-//  }
-//
-//  /* Start reception: provide the buffer pointer with offset and the buffer size */
-//  HAL_UART_Receive_IT(&huart1, (uint8_t *)(UserTxBufferFS + UserTxBufPtrIn), 1);
-//}
-///* USER CODE END 0 */
 
 /* USER CODE BEGIN 1 */
 
