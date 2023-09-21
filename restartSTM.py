@@ -1,5 +1,8 @@
 import time
 import RPi.GPIO as GPIO
+import os
+
+os.system("python pinsOff.py")
 
 GPIO.setmode(GPIO.BOARD)
 #GPIO.setup(11, GPIO.OUT)
